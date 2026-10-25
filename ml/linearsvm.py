@@ -32,24 +32,19 @@ model.fit(X_train, y_train)
 pred = model.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, pred))
 
-# Create decision boundary
-x_min, x_max = X_train[:, 0].min()-1, X_train[:, 0].max()+1
-y_min, y_max = X_train[:, 1].min()-1, X_train[:, 1].max()+1
-xx, yy = __import__("numpy").meshgrid(
-    __import__("numpy").linspace(x_min, x_max, 200),
-    __import__("numpy").linspace(y_min, y_max, 200)
-)
-Z = model.predict(__import__("numpy").c_[xx.ravel(), yy.ravel()])
+# Decision boundary
+x_min, x_max = X_train[:,0].min()-1, X_train[:,0].max()+1
+y_min, y_max = X_train[:,1].min()-1, X_train[:,1].max()+1
+
+xx, yy = np.meshgrid(np.linspace(x_min,x_max,100),
+                     np.linspace(y_min,y_max,100))
+
+Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
 Z = Z.reshape(xx.shape)
 
 plt.contourf(xx, yy, Z, alpha=0.2)
-plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train)
-plt.contour(
-    xx, yy,
-    model.decision_function(__import__("numpy").c_[xx.ravel(), yy.ravel()]).reshape(xx.shape),
-    levels=[-1, 0, 1], linestyles=["--", "-", "--"]
-)
-plt.title("Linear SVM: Setosa vs Non-Setosa")
-plt.xlabel("Sepal Length (scaled)")
-plt.ylabel("Sepal Width (scaled)")
+plt.scatter(X_train[:,0], X_train[:,1], c=y_train)
+plt.title("Linear SVM")
+plt.xlabel("Feature 1")
+plt.ylabel("Feature 2")
 plt.show()
